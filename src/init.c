@@ -15,7 +15,7 @@ long svcInit(const char *svc_image, size_t off)
   if(fd < 0) return SVCINIT_IMAGE_OPEN_ERR;
 
   struct stat sb;
-  if(fstat(fd, &sb) < 0 || (sb.st_size-off) < 477) {
+  if(fstat(fd, &sb) < 0 || (sb.st_size-off) < 489) {
     close(fd);
     return SVCINIT_IMAGE_SIZE_ERR;
   }
