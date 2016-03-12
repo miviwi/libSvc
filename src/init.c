@@ -32,7 +32,8 @@ long svcInit(const char *svc_image, size_t off)
 
 long svcClose()
 {
-  munmap((void *)svc, 0x1000);
+  if(munmap((void *)svc, 0x1000) < 0) return SVCINIT_MEM_MAP_ERR;
+  return SVCINIT_NO_ERR;
 }
 
 #ifdef __cplusplus
