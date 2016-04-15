@@ -43,6 +43,7 @@ svcRegister:
 .L1:
   ret
 
+.org 0x1000
 data:
-  ptr_table: .zero 16*8
-  str_table: .zero 16*16
+   ptr_table: .zero 16*8
+   str_table: .zero 16*16

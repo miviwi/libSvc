@@ -15,13 +15,16 @@ long svcInit(const char *svc_image, size_t off)
   if(fd < 0) return SVCINIT_IMAGE_OPEN_ERR;
 
   struct stat sb;
-  if(fstat(fd, &sb) < 0 || (sb.st_size-off) < 489) {
+  if(fstat(fd, &sb) < 0 || (sb.st_size-off) < 105) {
     close(fd);
     return SVCINIT_IMAGE_SIZE_ERR;
   }
 
-  void *addr = mmap((void *)svc, 0x1000, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, fd, off);
-  if(addr == (void *)-1) {
+  void *text = mmap((void *)svc, 0x1000, PROT_READ|PROT_EXEC,
+      MAP_PRIVATE|MAP_FIXED, fd, off);
+  void *data = mmap((void *)((long)svc+0x1000), 0x1000, PROT_READ|PROT_WRITE,
+      MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0);
+  if(text == (void *)-1 || data == (void *)-1) {
     close(fd);
     return SVCINIT_MEM_MAP_ERR;
   }
@@ -32,7 +35,7 @@ long svcInit(const char *svc_image, size_t off)
 
 long svcClose()
 {
-  if(munmap((void *)svc, 0x1000) < 0) return SVCINIT_MEM_MAP_ERR;
+  if(munmap((void *)svc, 0x2000) < 0) return SVCINIT_MEM_MAP_ERR;
   return SVCINIT_NO_ERR;
 }
 
